@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>هدايا SMG</title>
+<meta name="theme-color" content="#0a2620">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500;700&family=Cairo:wght@400;600;700&family=Poppins:wght@600;700&family=Tajawal:wght@500;700&family=El+Messiri:wght@600&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ===================== الإعداد — عدّل هذا السطر فقط =====================
+   ضع هنا رابط تطبيق الويب من Google Apps Script (ينتهي بـ /exec).
+   إذا تُرك فارغاً تعمل الصفحة في وضع التجربة ولا تحفظ شيئاً.            */
+const API_URL = "https://script.google.com/macros/s/AKfycbyPgsezTkvz2Mu0OAXNKrlYX8gM3t0ekjkX368lkxeIT7n6fR4oV9ESduGzCvimWIFF/exec";
+/* ======================================================================= */
+</script>
+<style>
+:root{
+  color-scheme:dark;
+  --green-900:#0a2620; --green-800:#0f3229;
+  --gold:#c9a24c; --gold-soft:#d9b968;
+  --ink:#f6f1e4; --muted:#b9c4b8; --line:rgba(201,162,76,.28); --line-soft:rgba(246,241,228,.12); --field:#0c2b23;
+  --ok:#8fd8ac; --ok-bg:rgba(143,216,172,.14); --warn:#f0c46a; --warn-bg:rgba(240,196,106,.14);
+  --bad:#f39a9a; --bad-bg:rgba(243,154,154,.14); --dim:#a7b2a8; --dim-bg:rgba(246,241,228,.08);
+  --f-display:"Alexandria","Cairo",system-ui,sans-serif;
+  --f-body:"Cairo","Tajawal",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-latin:"Poppins","Cairo",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--green-900);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;min-height:100vh;color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.65;
+  background:var(--green-900);
+  background-image:radial-gradient(120% 70% at 0% 100%,rgba(185,140,38,.55) 0%,rgba(185,140,38,.18) 35%,transparent 65%),
+                   linear-gradient(170deg,var(--green-800) 0%,var(--green-900) 60%)}
+.wrap{max-width:600px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:22px 56px;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;line-height:1.35;font-weight:700}
+h2{font-size:1.15rem;display:flex;align-items:center;gap:10px}
+h3{font-size:1.02rem}
+.drop{width:12px;height:12px;flex:none;background:var(--gold);border-radius:50% 50% 50% 0;transform:rotate(135deg)}
+.brand{display:flex;align-items:center;gap:14px}
+.brand svg{width:46px;height:46px;flex:none}
+.brand .wm{display:flex;flex-direction:column;line-height:1.1}
+.brand .smg{font-family:var(--f-latin);font-weight:700;font-size:1.7rem;letter-spacing:.04em;direction:ltr;text-align:right}
+.brand .sub{font-family:var(--f-latin);font-size:.62rem;letter-spacing:.16em;color:var(--muted);direction:ltr;text-align:right}
+.brand .title{margin-inline-start:auto;font-family:var(--f-display);font-size:1.05rem;color:var(--gold-soft)}
+.banner{font-size:.85rem;color:var(--warn);background:var(--warn-bg);border:1px dashed var(--warn);border-radius:12px;padding:10px 12px;margin:0}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:rgba(10,38,32,.7);border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px}
+.tabs button{font:inherit;font-weight:600;border:0;background:transparent;color:var(--muted);padding:9px 4px;border-radius:999px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--gold);color:var(--green-900)}
+.panel{background:rgba(15,50,41,.85);border:1px solid var(--line);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:16px;min-width:0}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+label,.lbl{font-weight:700;font-size:.92rem}
+.hint{font-size:.82rem;color:var(--muted);font-weight:400;margin:0}
+input,select{font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line-soft);border-radius:12px;padding:11px 12px;width:100%;min-width:0}
+input::placeholder{color:#7f8f84}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible,.choice:focus-within{outline:2px solid var(--gold);outline-offset:2px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:440px){.row2{grid-template-columns:1fr}}
+.fixed-salon{background:var(--field);border:1px solid var(--line-soft);border-radius:12px;padding:11px 12px;font-weight:600}
+.choices{display:flex;flex-direction:column;gap:8px}
+.choice{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;border:1px solid var(--line-soft);border-radius:14px;padding:12px;cursor:pointer;background:var(--field)}
+.choice:has(input:checked){border-color:var(--gold);background:rgba(201,162,76,.12)}
+.choice input{width:auto;margin-top:6px;accent-color:var(--gold)}
+.choice .name{font-weight:700}
+.choice .svc{font-size:.85rem;color:var(--muted)}
+.choice.msg{grid-template-columns:auto 1fr}
+.price{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--gold-soft)}
+.counter{font-size:.78rem;color:var(--muted);align-self:flex-end;font-variant-numeric:tabular-nums}
+.btn{font:inherit;font-weight:700;border:0;border-radius:999px;padding:13px 18px;cursor:pointer;background:var(--gold);color:var(--green-900);text-align:center;text-decoration:none;display:inline-block}
+.btn:hover{background:var(--gold-soft)}
+.btn[disabled]{opacity:.55;cursor:wait}
+.btn.ghost{background:transparent;color:var(--gold-soft);border:1px solid var(--line)}
+.btn.wa{background:#25d366;color:#08311c}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.actions .btn{flex:1 1 160px}
+.err{color:var(--bad);font-size:.9rem;min-height:1.2em;margin:0}
+.pill{display:inline-block;font-size:.8rem;font-weight:700;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.st-active{background:var(--ok-bg);color:var(--ok)}
+.st-pending{background:var(--warn-bg);color:var(--warn)}
+.st-used,.st-cancelled{background:var(--dim-bg);color:var(--dim)}
+.st-expired{background:var(--bad-bg);color:var(--bad)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.95rem;margin:0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-weight:600;min-width:0}
+.code{font-family:ui-monospace,Menlo,monospace;direction:ltr;unicode-bidi:isolate;letter-spacing:.06em;font-weight:700}
+.steps{display:flex;gap:8px;font-size:.82rem;color:var(--muted)}
+.steps span{flex:1;display:flex;align-items:center;gap:8px;justify-content:center;padding:4px 2px}
+.steps b{width:24px;height:24px;flex:none;display:grid;place-items:center;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:1px solid var(--line);font-size:.75rem}
+.steps b i{transform:rotate(45deg);font-style:normal}
+.steps span.on{color:var(--ink);font-weight:700}
+.steps span.on b{background:var(--gold);color:var(--green-900);border-color:var(--gold)}
+@media (max-width:400px){.steps span{flex-direction:column;gap:4px;text-align:center}}
+.staff{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line-soft);padding-top:14px}
+.poster-img{width:100%;height:auto;border-radius:18px;display:block;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.loading{color:var(--muted);text-align:center;padding:30px 0}
+footer{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:.78rem}
+footer .smg{font-family:var(--f-latin);font-weight:700;color:var(--ink);letter-spacing:.06em}
+#qrScratch{position:fixed;top:0;left:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+/* counter stands (print view) */
+.stands{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.stand{background:#fff;color:#0a2620;border-radius:16px;padding:20px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center}
+.stand h3{font-size:1.2rem}
+.stand .q{line-height:0}
+.stand .q img,.stand .q canvas{width:180px!important;height:180px!important}
+@media print{body{background:#fff}.wrap>*:not(#view-print){display:none!important}#view-print{background:none;border:0}.stand{break-inside:avoid;border:1px solid #ccc}}
+@media (prefers-reduced-motion:no-preference){.btn,.tabs button,.choice{transition:background .15s,border-color .15s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand">
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <defs><path id="petal" d="M0 -2 C 5 -8 5 -16 0 -21 C -5 -16 -5 -8 0 -2 Z"/></defs>
+      <g transform="translate(24 24)">
+        <use href="#petal" fill="#c9a24c"/><use href="#petal" transform="rotate(60)" fill="#c9a24c"/><use href="#petal" transform="rotate(120)" fill="#c9a24c"/>
+        <use href="#petal" transform="rotate(180)" fill="none" stroke="#f6f1e4" stroke-width="1.4"/><use href="#petal" transform="rotate(240)" fill="none" stroke="#f6f1e4" stroke-width="1.4"/><use href="#petal" transform="rotate(300)" fill="none" stroke="#f6f1e4" stroke-width="1.4"/>
+      </g>
+    </svg>
+    <div class="wm"><span class="smg">SMG</span><span class="sub">SALON MANAGEMENT GROUP</span></div>
+    <span class="title">هدايا الصالونات</span>
+  </header>
+
+  <p class="banner" id="demoBanner" hidden>وضع التجربة: الصفحة غير متصلة بجدول Google ولا تحفظ أي هدية حقيقية. رموز الموظفين للتجربة: <span id="demoPins"></span></p>
+
+  <nav class="tabs" role="tablist" id="tabs">
+    <button role="tab" aria-selected="true" data-view="create">إهداء باقة</button>
+    <button role="tab" aria-selected="false" data-view="verify">التحقق من هدية</button>
+  </nav>
+
+  <p class="loading" id="loading">جارٍ التحميل…</p>
+  <p class="err" id="fatal" hidden></p>
+
+  <!-- CREATE -->
+  <section id="view-create" class="panel" hidden>
+    <div class="steps"><span class="on" id="st1"><b><i>١</i></b>التفاصيل</span><span id="st2"><b><i>٢</i></b>الدفع</span><span id="st3"><b><i>٣</i></b>الإرسال</span></div>
+
+    <div id="createForm" style="display:flex;flex-direction:column;gap:16px">
+      <div class="row2">
+        <div class="field"><label for="fromSalon">الصالون الذي تدفع فيه</label><select id="fromSalon"></select><div class="fixed-salon" id="fromFixed" hidden></div></div>
+        <div class="field"><label for="toSalon">الهدية تُستخدم في</label><select id="toSalon"></select></div>
+      </div>
+      <div class="field"><span class="lbl">اختر الباقة</span><div class="choices" id="pkgList"></div></div>
+      <div class="row2">
+        <div class="field"><label for="giver">اسمك (المُهدي)</label><input id="giver" maxlength="30" autocomplete="name"></div>
+        <div class="field"><label for="receiver">اسم المُهدى إليه</label><input id="receiver" maxlength="30"></div>
+      </div>
+      <div class="field"><label for="occasion">المناسبة</label><select id="occasion"></select></div>
+      <div class="field" id="otherOccWrap" hidden><label for="otherOcc">اكتب المناسبة</label><input id="otherOcc" maxlength="30" placeholder="مثلاً: ترقية في العمل"></div>
+      <div class="field"><span class="lbl">اختر رسالة البطاقة</span><div class="choices" id="msgList"></div></div>
+      <div class="field">
+        <label for="note">رسالة شخصية <span class="hint">(اختياري)</span></label>
+        <input id="note" maxlength="80" placeholder="كلمة منك تظهر على البطاقة">
+        <span class="counter" id="noteCount">0 / 80</span>
+      </div>
+      <p class="hint">الهدية صالحة 30 يوماً من تاريخ الدفع، وغير قابلة للاسترداد.</p>
+      <p class="err" id="createErr"></p>
+      <button class="btn" id="createBtn">متابعة إلى الدفع</button>
+    </div>
+
+    <div id="activateStep" hidden style="display:flex;flex-direction:column;gap:14px">
+      <h2><span class="drop"></span>ادفع عند الاستقبال</h2>
+      <p class="hint">أظهر هذه الشاشة لموظف الاستقبال. تظهر البطاقة بعد تأكيد الدفع.</p>
+      <dl class="kv" id="pendingInfo"></dl>
+      <div class="staff">
+        <p class="hint" id="bookingHint"></p>
+        <div class="field"><label for="actPin">للموظف: رمز <span id="actSalon"></span></label><input id="actPin" type="password" inputmode="numeric" maxlength="8" autocomplete="off"></div>
+        <p class="err" id="actErr"></p>
+        <div class="actions"><button class="btn" id="activateBtn">تأكيد استلام المبلغ</button><button class="btn ghost" id="backBtn">تعديل الطلب</button></div>
+      </div>
+    </div>
+
+    <div id="shareStep" hidden style="display:flex;flex-direction:column;gap:14px">
+      <img class="poster-img" id="posterImg" alt="بطاقة الهدية">
+      <div class="actions">
+        <button class="btn wa" id="shareBtn">إرسال عبر واتساب</button>
+        <a class="btn ghost" id="saveBtn" download>حفظ الصورة</a>
+      </div>
+      <a class="btn ghost" id="waTextBtn" target="_blank" rel="noopener">إرسال الرابط فقط عبر واتساب</a>
+      <p class="hint" id="shareHint"></p>
+      <button class="btn ghost" id="newBtn">هدية جديدة</button>
+    </div>
+  </section>
+
+  <!-- VERIFY -->
+  <section id="view-verify" class="panel" hidden>
+    <h2><span class="drop"></span>التحقق من الهدية</h2>
+    <div class="field"><label for="vCode">رمز الهدية</label><input id="vCode" class="code" autocomplete="off" placeholder="EB-XXXXXX"></div>
+    <button class="btn" id="vBtn">تحقق</button>
+    <p class="err" id="vErr"></p>
+    <div id="vResult" hidden style="display:flex;flex-direction:column;gap:14px">
+      <img class="poster-img" id="vPoster" alt="بطاقة الهدية" hidden>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h3 id="vTitle"></h3><span class="pill" id="vPill"></span></div>
+      <dl class="kv" id="vInfo"></dl>
+      <div class="staff" id="vStaff">
+        <div class="field"><label for="vPin" id="vPinLbl"></label><input id="vPin" type="password" inputmode="numeric" maxlength="8" autocomplete="off"></div>
+        <p class="err" id="vActErr"></p>
+        <button class="btn" id="vActBtn"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTER STANDS -->
+  <section id="view-print" class="panel" hidden>
+    <h2><span class="drop"></span>ستاندات الاستقبال</h2>
+    <p class="hint">اطبع هذه الصفحة وضع كل بطاقة على مكتب الصالون المكتوب عليها. رمز كل صالون يفتح النموذج وصالون الدفع محدد مسبقاً.</p>
+    <div class="stands" id="stands"></div>
+    <button class="btn" onclick="window.print()">طباعة</button>
+  </section>
+
+  <footer><span>الرياض، المملكة العربية السعودية</span><span class="smg">SMG</span></footer>
+</div>
+<div id="qrScratch" aria-hidden="true"></div>
+
+<script>
+/* ---------------------------------------------------------------- helpers */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const MONTHS = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+const money = n => Number(n).toLocaleString("en-US")+" ر.س";
+const fmtDate = iso => { if(!iso) return ""; const d=new Date(iso); return d.getDate()+" "+MONTHS[d.getMonth()]+" "+d.getFullYear(); };
+const SITE = location.origin + location.pathname;
+const giftLink = code => SITE + "?g=" + encodeURIComponent(code);
+const STATUS_CLASS = {"فعّالة":"active","بانتظار الدفع":"pending","مستخدمة":"used","منتهية":"expired","ملغاة":"cancelled"};
+const OTHER = "أخرى", GENERAL = "عام";
+let CFG = null, SALON = {}, current = null, posterBlob = null;
+const bgCache = {};
+
+/* ---------------------------------------------------------------- API (real or demo) */
+async function apiGet(params){
+  if(!API_URL) return Demo.get(params);
+  const r = await fetch(API_URL + "?" + new URLSearchParams(params));
+  return r.json();
+}
+async function apiPost(body){
+  if(!API_URL) return Demo.post(body);
+  const r = await fetch(API_URL,{method:"POST",body:JSON.stringify(body)});
+  return r.json();
+}
+async function call(fn){
+  try{ return await fn(); }
+  catch(e){ return {ok:false,error:"تعذّر الاتصال بالنظام. تحقق من الإنترنت وأعد المحاولة."}; }
+}
+
+/* Demo backend: same answers as the real one, kept in this browser only. */
+const Demo = (()=>{
+  const tpl = {occ:"هدية بمناسبة {المناسبة}",to:"إلى {المهدى_إليه}",from:"مع محبة {المهدي}",note:"صالحة حتى {تاريخ_الانتهاء} · غير قابلة للاسترداد",
+               wa:"{المهدى_إليه}، لديك هدية من {المهدي} بمناسبة {المناسبة} 🎁\n{الباقة} في {الصالون}\nصالحة حتى {تاريخ_الانتهاء}"};
+  const salons = [
+    {id:"EB",name:"80s Barbershop",kind:"رجالي",pin:"111111",theme:{bg:"#1b1530",ink:"#f6f1ff",acc:"#ff8fb1"}},
+    {id:"SS",name:"Signature Shaves",kind:"رجالي",pin:"222222",theme:{bg:"#16202e",ink:"#eef3fa",acc:"#d6a65a"}},
+    {id:"EL",name:"Elysian",kind:"نسائي",pin:"333333",theme:{bg:"#3a1d34",ink:"#fff4f2",acc:"#f0b3a6"}},
+    {id:"WA",name:"Women Address",kind:"نسائي",pin:"444444",theme:{bg:"#123a3a",ink:"#f2fbf8",acc:"#9fd8c4"}}
+  ].map(s=>({...s,tpl,hasBg:false}));
+  const packages = [
+    {salon:"EB",id:"EB1",name:"الحلاقة الكلاسيكية",svc:"قص شعر + حلاقة ذقن بالموس",price:80},{salon:"EB",id:"EB2",name:"باقة العريس",svc:"قص + ذقن + تنظيف بشرة + مساج",price:250},
+    {salon:"SS",id:"SS1",name:"باقة الانتعاش",svc:"قص + غسيل + تنظيف بشرة",price:120},{salon:"SS",id:"SS2",name:"العناية الكاملة",svc:"قص + ذقن + ماسك + باديكير",price:200},
+    {salon:"EL",id:"EL1",name:"باقة الإشراقة",svc:"تنظيف بشرة + سشوار",price:180},{salon:"EL",id:"EL2",name:"باقة العروس المصغّرة",svc:"مكياج سهرة + تسريحة + مناكير",price:450},
+    {salon:"WA",id:"WA1",name:"صبغة وقص",svc:"صبغة كاملة + قص + سشوار",price:350},{salon:"WA",id:"WA2",name:"يوم الدلال",svc:"حمام مغربي + ماسك شعر",price:220}];
+  const messages = {
+    "عيد ميلاد":{f:["كل عام وأنتِ بخير، هذا يومكِ فدلّلي نفسكِ","عيد ميلاد سعيد، تستاهلين يوماً كله راحة وجمال"],m:["كل عام وأنت بخير، هذا يومك فدلّل نفسك","عيد ميلاد سعيد، تستاهل يوماً كله راحة وأناقة"]},
+    "عيد الأم":{f:["إلى أغلى الناس، شكراً على كل شيء","يوم لكِ وحدكِ يا أمي، تستاهلين كل الدلال"],m:["كل عام وأنت بخير، وهذه هدية بهذه المناسبة"]},
+    "تخرّج":{f:["مبروك التخرّج، تعبكِ يستاهل يوماً من الدلال","فخورين فيكِ، وهذه بداية أجمل"],m:["مبروك التخرّج، تعبك يستاهل يوماً من الراحة","فخورين فيك، وهذه بداية أجمل"]},
+    "زواج":{f:["ألف مبروك، وتستاهلين أجمل إطلالة","بالرفاه والبنين، وهذه هدية لأجمل عروس"],m:["ألف مبروك، وتستاهل أجمل إطلالة","بالرفاه والبنين، وهذه هدية لأحلى عريس"]},
+    "العيد":{f:["عيدكِ مبارك، وكل عام وأنتِ بخير","عساكِ من عوّاده، وهذه عيديتكِ"],m:["عيدك مبارك، وكل عام وأنت بخير","عساك من عوّاده، وهذه عيديتك"]},
+    "شكر وتقدير":{f:["شكراً لأنكِ دائماً موجودة"],m:["شكراً لأنك دائماً موجود"]},
+    "بدون مناسبة":{f:["بدون مناسبة… لأنكِ تستاهلين"],m:["بدون مناسبة… لأنك تستاهل"]},
+    [GENERAL]:{f:["بمناسبة {المناسبة}، هذه هدية لكِ مع كل المحبة","تستاهلين يوماً كله راحة وجمال"],m:["بمناسبة {المناسبة}، هذه هدية لك مع كل المحبة","تستاهل يوماً كله راحة وأناقة"]}
+  };
+  let gifts = {};
+  try{ gifts = JSON.parse(localStorage.getItem("smgDemoGifts")||"{}"); }catch(_){}
+  const save = ()=>{ try{ localStorage.setItem("smgDemoGifts",JSON.stringify(gifts)); }catch(_){} };
+  const S = id => salons.find(s=>s.id===id);
+  const status = g => (g.status==="فعّالة" && new Date(g.expires) < new Date()) ? "منتهية" : g.status;
+  const pub = g => ({...g,status:status(g)});
+  const fillMsg = (t,d)=>t.split("{المهدى_إليه}").join(d.receiver).split("{المهدي}").join(d.giver).split("{المناسبة}").join(d.occasion);
+  return {
+    pins: salons.map(s=>s.name+" "+s.pin).join("، "),
+    async get(p){
+      if(p.action==="config") return {ok:true,days:30,salons:salons.map(({pin,...s})=>s),packages,messages,occasions:Object.keys(messages).filter(o=>o!==GENERAL).concat([OTHER])};
+      if(p.action==="gift"){ const g=gifts[String(p.code||"").toUpperCase()]; return g?{ok:true,gift:pub(g)}:{ok:false,error:"لا توجد هدية بهذا الرمز. تأكد من الرمز وأعد المحاولة."}; }
+      if(p.action==="bg") return {ok:true,data:""};
+    },
+    async post(b){
+      if(b.action==="create"){
+        const from=S(b.from), to=S(b.to), pkg=packages.find(p=>p.salon===b.to&&p.id===b.pkgId);
+        if(!from||!to||!pkg) return {ok:false,error:"اختر الصالون والباقة."};
+        const occasion = b.occasionKey===OTHER ? b.otherOccasion : b.occasionKey;
+        const list = (messages[b.occasionKey===OTHER?GENERAL:b.occasionKey]||messages[GENERAL])[to.kind==="نسائي"?"f":"m"];
+        const a="ABCDEFGHJKMNPQRSTUVWXYZ23456789"; let s=""; for(let i=0;i<6;i++) s+=a[Math.floor(Math.random()*a.length)];
+        const g={code:to.id+"-"+s,from:from.id,fromName:from.name,to:to.id,toName:to.name,pkgName:pkg.name,svc:pkg.svc,price:pkg.price,
+          giver:b.giver,receiver:b.receiver,occasion,msg:fillMsg(list[b.msgIndex]||list[0],{giver:b.giver,receiver:b.receiver,occasion}),note:b.note||"",
+          status:"بانتظار الدفع",activated:"",expires:"",used:""};
+        gifts[g.code]=g; save(); return {ok:true,gift:pub(g)};
+      }
+      const g=gifts[String(b.code||"").toUpperCase()];
+      if(!g) return {ok:false,error:"لا توجد هدية بهذا الرمز."};
+      if(b.action==="activate"){
+        if(status(g)!=="بانتظار الدفع") return {ok:false,error:"لا يمكن تفعيل هذه الهدية. حالتها: "+status(g)+"."};
+        if(b.pin!==S(g.from).pin) return {ok:false,error:"الرمز غير صحيح. يجب أن يدخله موظف "+g.fromName+"."};
+        const now=new Date(); g.status="فعّالة"; g.activated=now.toISOString(); g.expires=new Date(now.getTime()+30*864e5).toISOString(); save(); return {ok:true,gift:pub(g)};
+      }
+      if(b.action==="redeem"){
+        if(status(g)!=="فعّالة") return {ok:false,error:"لا يمكن استخدام هذه الهدية. حالتها: "+status(g)+"."};
+        if(b.pin!==S(g.to).pin) return {ok:false,error:"الرمز غير صحيح. يجب أن يدخله موظف "+g.toName+"."};
+        g.status="مستخدمة"; g.used=new Date().toISOString(); save(); return {ok:true,gift:pub(g)};
+      }
+    }
+  };
+})();
+
+/* ---------------------------------------------------------------- views */
+function show(v){
+  ["create","verify","print"].forEach(x=>$("view-"+x).hidden = x!==v);
+  document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.view===v));
+}
+document.querySelectorAll("#tabs button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
+function setStep(n){
+  [1,2,3].forEach(i=>$("st"+i).classList.toggle("on",i===n));
+  $("createForm").hidden=n!==1; $("activateStep").hidden=n!==2; $("shareStep").hidden=n!==3;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function busy(btn,on,label){ btn.disabled=on; if(on){btn.dataset.l=btn.textContent;btn.textContent=label||"لحظة…";} else if(btn.dataset.l){btn.textContent=btn.dataset.l;} }
+
+/* ---------------------------------------------------------------- create form */
+const genderOf = id => SALON[id].kind==="نسائي" ? "f" : "m";
+const bankFor = occ => CFG.messages[occ] || CFG.messages[GENERAL] || {f:[],m:[]};
+const fillMsg = (t,d)=>String(t).split("{المهدى_إليه}").join(d.receiver).split("{المهدي}").join(d.giver).split("{المناسبة}").join(d.occasion);
+function currentOcc(){ const o=$("occasion").value; return o===OTHER ? $("otherOcc").value.trim() : o; }
+
+function renderPkgs(){
+  const list = CFG.packages.filter(p=>p.salon===$("toSalon").value);
+  $("pkgList").innerHTML = list.length ? list.map((p,i)=>`<label class="choice"><input type="radio" name="pkg" id="pkg-${esc(p.id)}" value="${esc(p.id)}" ${i===0?"checked":""}>
+    <span><span class="name">${esc(p.name)}</span><br><span class="svc">${esc(p.svc)}</span></span><span class="price">${money(p.price)}</span></label>`).join("")
+    : `<p class="hint">لا توجد باقات متاحة في هذا الصالون حالياً.</p>`;
+}
+function renderMsgs(){
+  const prev=+(document.querySelector('input[name="msg"]:checked')?.value||0);
+  const occ=$("occasion").value, list=bankFor(occ===OTHER?GENERAL:occ)[genderOf($("toSalon").value)]||[];
+  const d={giver:$("giver").value.trim()||"المُهدي",receiver:$("receiver").value.trim()||"المُهدى إليه",occasion:currentOcc()||"المناسبة"};
+  $("msgList").innerHTML = list.map((m,i)=>`<label class="choice msg"><input type="radio" name="msg" id="msg-${i}" value="${i}" ${i===(prev<list.length?prev:0)?"checked":""}><span>${esc(fillMsg(m,d))}</span></label>`).join("")
+    || `<p class="hint">لا توجد رسائل لهذه المناسبة.</p>`;
+}
+function initCreate(){
+  const opts = CFG.salons.map(s=>`<option value="${esc(s.id)}">${esc(s.name)} (${esc(s.kind)})</option>`).join("");
+  $("fromSalon").innerHTML=opts; $("toSalon").innerHTML=opts;
+  const fixed = new URLSearchParams(location.search).get("s");
+  if(fixed && SALON[fixed.toUpperCase()]){
+    $("fromSalon").value=fixed.toUpperCase(); $("fromSalon").hidden=true;
+    $("fromFixed").hidden=false; $("fromFixed").textContent=SALON[fixed.toUpperCase()].name;
+    $("toSalon").value=fixed.toUpperCase();
+  }
+  $("occasion").innerHTML = CFG.occasions.map(o=>`<option>${esc(o)}</option>`).join("");
+  $("toSalon").addEventListener("change",()=>{renderPkgs();renderMsgs();});
+  ["giver","receiver","otherOcc"].forEach(id=>$(id).addEventListener("input",renderMsgs));
+  $("occasion").addEventListener("change",()=>{ $("otherOccWrap").hidden=$("occasion").value!==OTHER; if(!$("otherOccWrap").hidden)$("otherOcc").focus(); renderMsgs(); });
+  $("note").addEventListener("input",()=>$("noteCount").textContent=$("note").value.length+" / 80");
+  renderPkgs(); renderMsgs();
+}
+
+$("createBtn").addEventListener("click",async()=>{
+  const giver=$("giver").value.trim(), receiver=$("receiver").value.trim(), pkg=document.querySelector('input[name="pkg"]:checked');
+  const occKey=$("occasion").value;
+  if(!giver||!receiver) return $("createErr").textContent="اكتب اسمك واسم المُهدى إليه.";
+  if(!pkg) return $("createErr").textContent="اختر باقة.";
+  if(occKey===OTHER && !$("otherOcc").value.trim()) return $("createErr").textContent="اكتب المناسبة، أو اختر واحدة من القائمة.";
+  $("createErr").textContent=""; busy($("createBtn"),true);
+  const res = await call(()=>apiPost({action:"create",from:$("fromSalon").value,to:$("toSalon").value,pkgId:pkg.value,giver,receiver,
+    occasionKey:occKey,otherOccasion:$("otherOcc").value.trim(),msgIndex:+(document.querySelector('input[name="msg"]:checked')?.value||0),note:$("note").value.trim()}));
+  busy($("createBtn"),false);
+  if(!res.ok) return $("createErr").textContent=res.error;
+  current=res.gift;
+  $("pendingInfo").innerHTML=`<dt>الرمز</dt><dd class="code">${esc(current.code)}</dd>
+    <dt>الباقة</dt><dd>${esc(current.pkgName)}</dd><dt>تُستخدم في</dt><dd>${esc(current.toName)}</dd>
+    <dt>إلى</dt><dd>${esc(current.receiver)}</dd><dt>المبلغ</dt><dd class="price">${money(current.price)}</dd>`;
+  $("actSalon").textContent=current.fromName;
+  $("bookingHint").innerHTML = current.from!==current.to ? `سجّل المبلغ في نظام الحجز تحت باقة <b>«هدية ← ${esc(current.toName)}»</b> قبل التأكيد.` : "";
+  $("actPin").value=""; $("actErr").textContent="";
+  setStep(2);
+});
+$("backBtn").addEventListener("click",()=>setStep(1));
+
+$("activateBtn").addEventListener("click",async()=>{
+  if(!$("actPin").value) return $("actErr").textContent="أدخل رمز الصالون.";
+  busy($("activateBtn"),true,"جارٍ التأكيد…");
+  const res = await call(()=>apiPost({action:"activate",code:current.code,pin:$("actPin").value}));
+  busy($("activateBtn"),false);
+  if(!res.ok) return $("actErr").textContent=res.error;
+  current=res.gift; $("actPin").value="";
+  await showPoster(current,$("posterImg"));
+  const text = waText(current);
+  $("waTextBtn").href="https://wa.me/?text="+encodeURIComponent(text);
+  $("saveBtn").href=$("posterImg").src; $("saveBtn").download="هدية-"+current.code+".png";
+  const canShare = posterBlob && navigator.canShare && navigator.canShare({files:[new File([posterBlob],"gift.png",{type:"image/png"})]});
+  $("shareHint").textContent = canShare ? "اختر واتساب من قائمة المشاركة ثم اختر الشخص." : "هذا المتصفح لا يدعم إرسال الصورة مباشرة. احفظ الصورة ثم أرسلها من واتساب، أو أرسل الرابط فقط.";
+  setStep(3);
+});
+$("shareBtn").addEventListener("click",async()=>{
+  const file = new File([posterBlob],"هدية-"+current.code+".png",{type:"image/png"});
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+    try{ await navigator.share({files:[file],text:waText(current)}); }catch(_){}
+  } else { window.open($("waTextBtn").href,"_blank"); }
+});
+$("newBtn").addEventListener("click",()=>{ current=null; ["receiver","note","otherOcc"].forEach(id=>$(id).value=""); $("noteCount").textContent="0 / 80"; renderMsgs(); setStep(1); });
+
+function fillTpl(t,g){
+  return String(t||"").split("{المهدى_إليه}").join(g.receiver).split("{المهدي}").join(g.giver).split("{المناسبة}").join(g.occasion)
+    .split("{الباقة}").join(g.pkgName).split("{الصالون}").join(g.toName).split("{تاريخ_الانتهاء}").join(fmtDate(g.expires));
+}
+function waText(g){ return fillTpl(SALON[g.to]?.tpl?.wa || "{المهدى_إليه}، لديك هدية من {المهدي}",g) + "\n" + giftLink(g.code); }
+
+/* ---------------------------------------------------------------- poster as a real 1080×1350 image */
+async function loadImg(src){ return new Promise((ok,no)=>{ const i=new Image(); i.onload=()=>ok(i); i.onerror=no; i.src=src; }); }
+async function getBg(id){
+  if(!SALON[id]?.hasBg) return null;
+  if(bgCache[id]!==undefined) return bgCache[id];
+  const r = await call(()=>apiGet({action:"bg",salon:id}));
+  bgCache[id] = (r.ok && r.data) ? await loadImg(r.data).catch(()=>null) : null;
+  return bgCache[id];
+}
+function wrap(ctx,text,maxW,maxLines){
+  const words=String(text).split(/\s+/).filter(Boolean), lines=[]; let line="";
+  for(const w of words){ const t=line?line+" "+w:w; if(ctx.measureText(t).width>maxW && line){ lines.push(line); line=w; } else line=t; }
+  if(line) lines.push(line);
+  if(lines.length>maxLines){ lines.length=maxLines; lines[maxLines-1]=lines[maxLines-1].replace(/\s*\S+$/,"")+"…"; }
+  return lines;
+}
+function rrect(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function alpha(hex,a){ const h=hex.replace("#",""); const n=parseInt(h.length===3?h.split("").map(c=>c+c).join(""):h,16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; }
+
+async function drawPoster(g){
+  const s=SALON[g.to], th=s.theme, t=s.tpl, W=1080, H=1350, P=90;
+  await Promise.all(["600 40px Poppins","500 40px Tajawal","700 40px Tajawal","600 90px 'El Messiri'","700 70px Alexandria"].map(f=>document.fonts.load(f).catch(()=>{})));
+  const c=document.createElement("canvas"); c.width=W; c.height=H;
+  const ctx=c.getContext("2d");
+  ctx.fillStyle=th.bg; ctx.fillRect(0,0,W,H);
+  const bg = await getBg(g.to);
+  if(bg){
+    const sc=Math.max(W/bg.width,H/bg.height), bw=bg.width*sc, bh=bg.height*sc;
+    ctx.drawImage(bg,(W-bw)/2,(H-bh)/2,bw,bh);
+    const gr=ctx.createLinearGradient(0,H,0,0);
+    gr.addColorStop(0,alpha(th.bg,.94)); gr.addColorStop(.55,alpha(th.bg,.72)); gr.addColorStop(.85,alpha(th.bg,.25)); gr.addColorStop(1,alpha(th.bg,0));
+    ctx.fillStyle=gr; ctx.fillRect(0,0,W,H);
+  } else {
+    const rg=ctx.createRadialGradient(80,80,0,80,80,560); rg.addColorStop(0,alpha(th.acc,.35)); rg.addColorStop(1,alpha(th.acc,0));
+    ctx.fillStyle=rg; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle=alpha(th.acc,.55); ctx.lineWidth=2; rrect(ctx,28,28,W-56,H-56,30); ctx.stroke();
+  }
+  ctx.direction="rtl"; ctx.textAlign="right"; ctx.textBaseline="alphabetic";
+  const R=W-P; let y;
+  if(bg){ y=330; } else {
+    ctx.fillStyle=th.acc; ctx.font="600 40px Poppins, Tajawal, sans-serif"; ctx.fillText(s.name,R,150); y=230;
+  }
+  ctx.fillStyle=alpha(th.ink,.85); ctx.font="500 38px Tajawal, sans-serif"; ctx.fillText(fillTpl(t.occ,g),R,y); y+=110;
+  let size=96; ctx.font=`600 ${size}px 'El Messiri', Tajawal, sans-serif`;
+  const toLine=fillTpl(t.to,g); while(ctx.measureText(toLine).width>W-2*P && size>56){ size-=6; ctx.font=`600 ${size}px 'El Messiri', Tajawal, sans-serif`; }
+  ctx.fillStyle=th.ink; ctx.fillText(toLine,R,y); y+=86;
+  if(g.msg){ ctx.font="500 46px Tajawal, sans-serif"; ctx.fillStyle=th.ink;
+    for(const l of wrap(ctx,g.msg,W-2*P-60,bg?2:3)){ ctx.fillText(l,R,y); y+=64; } y+=6; }
+  if(g.note){ ctx.font="500 38px Tajawal, sans-serif"; ctx.fillStyle=alpha(th.ink,.9);
+    const nl=wrap(ctx,"«"+g.note+"»",W-2*P-80,2), top=y-38;
+    for(const l of nl){ ctx.fillText(l,R-24,y); y+=54; }
+    ctx.fillStyle=th.acc; ctx.fillRect(R-4,top,4,nl.length*54-10); y+=6; }
+  ctx.font="500 42px Tajawal, sans-serif"; ctx.fillStyle=alpha(th.ink,.92); ctx.fillText(fillTpl(t.from,g),R,y+8);
+
+  // bottom block, laid out upward from the bottom edge
+  const qrSize=240, qx=P, qy=H-P-qrSize;
+  ctx.fillStyle="#ffffff"; rrect(ctx,qx-14,qy-14,qrSize+28,qrSize+28,22); ctx.fill();
+  const scratch=$("qrScratch"); scratch.innerHTML="";
+  new QRCode(scratch,{text:giftLink(g.code),width:qrSize,height:qrSize,correctLevel:QRCode.CorrectLevel.M});
+  const qc=scratch.querySelector("canvas"); if(qc) ctx.drawImage(qc,qx,qy,qrSize,qrSize);
+  const textW=W-2*P-qrSize-60;
+  const yCode=H-P;
+  ctx.textAlign="right";
+  ctx.font="700 30px ui-monospace, Menlo, monospace"; ctx.fillStyle=alpha(th.ink,.8); ctx.direction="ltr"; ctx.textAlign="right"; ctx.fillText(g.code,R,yCode);
+  ctx.direction="rtl";
+  ctx.font="500 30px Tajawal, sans-serif"; ctx.fillStyle=alpha(th.ink,.85);
+  const nlines=wrap(ctx,fillTpl(t.note,g),textW,2);
+  const yNoteTop=yCode-48-(nlines.length-1)*40;
+  nlines.forEach((l,i)=>ctx.fillText(l,R,yNoteTop+i*40));
+  const yPrice=yNoteTop-66;
+  ctx.font="700 70px Alexandria, Tajawal, sans-serif"; ctx.fillStyle=th.acc; ctx.fillText(money(g.price),R,yPrice);
+  ctx.font="500 34px Tajawal, sans-serif"; ctx.fillStyle=alpha(th.ink,.85);
+  const sl=wrap(ctx,g.svc,textW,2); let ys=yPrice-86-(sl.length-1)*46;
+  const yPkg=ys-60;
+  sl.forEach((l,i)=>ctx.fillText(l,R,ys+i*46));
+  ctx.font="700 50px Tajawal, sans-serif"; ctx.fillStyle=th.ink; ctx.fillText(wrap(ctx,g.pkgName,textW,1)[0],R,yPkg);
+  ctx.strokeStyle=alpha(th.acc,.5); ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(R,yPkg-70); ctx.lineTo(P,yPkg-70); ctx.stroke();
+  return c;
+}
+async function showPoster(g,img){
+  const c=await drawPoster(g);
+  posterBlob = await new Promise(ok=>c.toBlob(ok,"image/png"));
+  img.src = URL.createObjectURL(posterBlob); img.hidden=false;
+}
+
+/* ---------------------------------------------------------------- verify / redeem */
+let vGift=null;
+$("vBtn").addEventListener("click",()=>lookup($("vCode").value));
+$("vCode").addEventListener("keydown",e=>{ if(e.key==="Enter") lookup($("vCode").value); });
+async function lookup(code){
+  code=String(code||"").trim().toUpperCase(); if(!code) return $("vErr").textContent="أدخل رمز الهدية.";
+  $("vErr").textContent=""; busy($("vBtn"),true);
+  const res=await call(()=>apiGet({action:"gift",code}));
+  busy($("vBtn"),false);
+  if(!res.ok){ $("vResult").hidden=true; return $("vErr").textContent=res.error; }
+  vGift=res.gift; renderVerify();
+}
+async function renderVerify(){
+  const g=vGift;
+  $("vResult").hidden=false;
+  $("vTitle").textContent=g.pkgName;
+  $("vPill").className="pill st-"+(STATUS_CLASS[g.status]||"used"); $("vPill").textContent=g.status;
+  $("vInfo").innerHTML=`<dt>الخدمات</dt><dd>${esc(g.svc)}</dd><dt>القيمة</dt><dd class="price">${money(g.price)}</dd>
+    <dt>تُستخدم في</dt><dd>${esc(g.toName)}</dd><dt>إلى</dt><dd>${esc(g.receiver)}</dd><dt>من</dt><dd>${esc(g.giver)}</dd>
+    ${g.expires?`<dt>صالحة حتى</dt><dd>${fmtDate(g.expires)}</dd>`:""}${g.used?`<dt>استُخدمت في</dt><dd>${fmtDate(g.used)}</dd>`:""}<dt>الرمز</dt><dd class="code">${esc(g.code)}</dd>`;
+  $("vPin").value=""; $("vActErr").textContent="";
+  if(g.status==="فعّالة"){ $("vStaff").hidden=false; $("vPinLbl").textContent="للموظفين فقط: رمز "+g.toName; $("vActBtn").textContent="تسجيل استخدام الهدية"; $("vActBtn").dataset.a="redeem"; }
+  else if(g.status==="بانتظار الدفع"){ $("vStaff").hidden=false; $("vPinLbl").textContent="للموظفين فقط: رمز "+g.fromName+" لتأكيد الدفع"; $("vActBtn").textContent="تأكيد استلام المبلغ"; $("vActBtn").dataset.a="activate"; }
+  else $("vStaff").hidden=true;
+  if((g.status==="فعّالة"||g.status==="مستخدمة") && SALON[g.to]) showPoster(g,$("vPoster")).catch(()=>{}); else $("vPoster").hidden=true;
+}
+$("vActBtn").addEventListener("click",async()=>{
+  if(!$("vPin").value) return $("vActErr").textContent="أدخل رمز الصالون.";
+  busy($("vActBtn"),true);
+  const res=await call(()=>apiPost({action:$("vActBtn").dataset.a,code:vGift.code,pin:$("vPin").value}));
+  busy($("vActBtn"),false);
+  if(!res.ok) return $("vActErr").textContent=res.error;
+  vGift=res.gift; renderVerify();
+});
+
+/* ---------------------------------------------------------------- counter stands */
+function renderStands(){
+  $("stands").innerHTML = CFG.salons.map(s=>`<div class="stand"><h3>${esc(s.name)}</h3><div>أهدِ من تحب باقة من صالونات SMG</div><div class="q" id="stand-${esc(s.id)}"></div><div style="font-size:.85rem">امسح الرمز بكاميرا الجوال</div></div>`).join("");
+  CFG.salons.forEach(s=>new QRCode($("stand-"+s.id),{text:SITE+"?s="+s.id,width:360,height:360,correctLevel:QRCode.CorrectLevel.M}));
+}
+
+/* ---------------------------------------------------------------- boot */
+(async()=>{
+  if(!API_URL){ $("demoBanner").hidden=false; $("demoPins").textContent=Demo.pins; }
+  const res=await call(()=>apiGet({action:"config"}));
+  $("loading").hidden=true;
+  if(!res.ok){ $("fatal").hidden=false; $("fatal").textContent=res.error; return; }
+  CFG=res; CFG.salons.forEach(s=>SALON[s.id]=s);
+  initCreate();
+  const q=new URLSearchParams(location.search);
+  if(q.get("print")){ renderStands(); show("print"); $("tabs").hidden=true; return; }
+  if(q.get("g")){ show("verify"); $("vCode").value=q.get("g"); lookup(q.get("g")); return; }
+  show("create");
+})();
+</script>
+</body>
+</html>
